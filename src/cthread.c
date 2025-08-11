@@ -109,7 +109,7 @@ int threadpool_add_task(threadpool_t *pool, void (*function)(void *), void *arg)
 
 // Worker loop
 static void* threadpool_worker(void *arg) {
-    threadpool_t *pool = (threadpool_t *)arg;
+    threadpool_t *pool = arg;
 
     while (1) {
         pthread_mutex_lock(&pool->lock);
@@ -120,7 +120,6 @@ static void* threadpool_worker(void *arg) {
         }
 
         if (pool->shutdown) {
-            syslog(LOG_INFO, "Threadpool shutdown triggered.");
             pthread_mutex_unlock(&pool->lock);
             pthread_exit(NULL);
         }
